@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 
-export default function FormModal({ isOpen, onClose, item }) {
+export default function FormModal({ isOpen, onClose, item,onSubmit }) {
+  console.log(item)
   const [formData, setFormData] = useState({
-    name: item.studentName || '',
-    roomNo: item.roomNo || '',
-    presentAbsent: item.presentAbsent || '',
-    vegToggle: item.mealPreference === 'Veg',
-    nonVegToggle: item.mealPreference === 'NonVeg',
-    vegFood: item.desiredFood === 'Veg Biryani' || item.desiredFood === 'Paneer Butter Masala' ? item.desiredFood : 'Veg Biryani',
-    nonVegFood: item.desiredFood === 'Chicken Biryani' || item.desiredFood === 'Fish Curry' ? item.desiredFood : 'Chicken Biryani',
-    phoneNumber: item.phoneNumber || '',
+    name: item.student_name || '',
+    roomNo: item.room_no || '',
+    presentAbsent: item.attendance || '',
+    vegToggle: item.meal_preference === 'Veg',
+    nonVegToggle: item.meal_preference === 'NonVeg',
+    vegFood: item.desiredfood === 'Veg Biryani' || item.desiredfood === 'Paneer Butter Masala' ? item.desiredfood : 'Veg Biryani',
+    nonVegFood: item.desiredfood === 'Chicken Biryani' || item.desiredfood === 'Fish Curry' ? item.desiredfood : 'Chicken Biryani',
+    phoneNumber: item.phone_number || '',
     residence: item.residence || '',
   });
 
@@ -35,23 +36,26 @@ export default function FormModal({ isOpen, onClose, item }) {
       residence: '',
     });
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const mealPreference = formData.vegToggle ? 'Veg' : 'NonVeg';
-    const desiredFood = formData.vegToggle ? formData.vegFood : formData.nonVegFood;
+    const desiredfood = formData.vegToggle ? formData.vegFood : formData.nonVegFood;
     const updatedFormData = {
-      name: formData.name,
-      roomNo: formData.roomNo,
-      presentAbsent: formData.presentAbsent,
-      mealPreference,
-      desiredFood,
-      phoneNumber: formData.phoneNumber,
+      room_no: formData.roomNo,
+      student_name: formData.name,
+      attendance: formData.presentAbsent,
+      meal_preference: mealPreference,
+      desiredfood :desiredfood,
+      phone_number: formData.phoneNumber,
       residence: formData.residence,
     };
-    console.log('Form Data:', updatedFormData);
+    onSubmit(updatedFormData);
+    console.log("updatedFormData",updatedFormData)
     onClose();
   };
+  
 
   if (!isOpen) return null;
 
