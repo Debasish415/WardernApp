@@ -11,6 +11,8 @@ import Wednesday from './components/WeekDays/Wednesday';
 import Friday from './components/WeekDays/Friday';
 import Thursday from './components/WeekDays/Thursday';
 import Saturday from './components/WeekDays/Saturday';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,11 +31,9 @@ function App() {
     <>
       <div className='MainContainer'>
         <div className='Navbar'>
-
           <Navbar />
         </div>
         <div className='Content'>
-
           <Routes>
             <Route path='/' element={<Home />}></Route>
             <Route path='/contact' element={<Contact />}></Route>
@@ -57,6 +57,9 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* ToastContainer for displaying toast notifications */}
+      <ToastContainer/>
     </>
   );
 }

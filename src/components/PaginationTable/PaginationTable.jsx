@@ -3,6 +3,7 @@ import DeleteModal from '../DeleteModal';
 import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, TrashIcon } from '@heroicons/react/20/solid';
 import FormModal from '../FormModal';
 import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const itemsPerPage = 10;
 
@@ -12,7 +13,7 @@ export default function PaginationTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-
+ const [operation, setOperation]= useState(null)
   const params = useLocation();
   console.log(params.pathname);
 
@@ -53,12 +54,14 @@ export default function PaginationTable() {
     }
   };
 
-  const handleEdit = (item) => {
+  const handleEdit = (item,name) => {
+    setOperation(name)
     setSelectedItem(item);
     setIsFormOpen(true);
   };
 
-  const handleCreate = ()=>{
+  const handleCreate = (item,name)=>{
+    setOperation(name)
     setSelectedItem({});
     setIsFormOpen(true)
   }
@@ -74,8 +77,10 @@ export default function PaginationTable() {
       await fetch(`http://localhost:5000/api/students/${selectedItem}`, { method: 'DELETE' });
       setItems(items.filter(item => item.id !== selectedItem));
       setIsModalOpen(false);
+      toast.error('Deleted SuccessFull!');
     } catch (error) {
-      console.error('Error deleting item:', error);
+      toast.error('Delete Failed!');
+      
     }
   };
 
@@ -122,7 +127,7 @@ export default function PaginationTable() {
     setIsFormOpen(false);
     setSelectedItem(null);
   };
-  
+
   return (
     <>
       {isModalOpen && (
@@ -137,6 +142,7 @@ export default function PaginationTable() {
           isOpen={isFormOpen}
           onClose={handleCloseModal}
           item={selectedItem}
+          operation={operation}
           onSubmit={handleFormSubmit}
         />
       )}
@@ -144,7 +150,7 @@ export default function PaginationTable() {
       <div className="p-12">
         <button
           className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-          onClick={handleCreate}
+          onClick={()=>handleCreate(null,"Create")}
         >
           Create
         </button>
@@ -167,7 +173,7 @@ export default function PaginationTable() {
                 <td className="px-12 py-3 whitespace-nowrap text-sm">{item.attendance}</td>
                 <td className="px-12 py-3 whitespace-nowrap text-sm">{item.meal_preference}</td>
                 <td className="px-12 py-3 whitespace-nowrap text-sm text-right">
-                  <button onClick={() => handleEdit(item)} className="text-indigo-600 hover:text-indigo-900 mx-2">
+                  <button onClick={() => handleEdit(item,"Edit")} className="text-indigo-600 hover:text-indigo-900 mx-2">
                     <PencilIcon className="h-5 w-5 inline" />
                   </button>
                   <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-900 mx-2">

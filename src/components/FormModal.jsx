@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function FormModal({ isOpen, onClose, item,onSubmit }) {
-  console.log(item)
+export default function FormModal({ isOpen, onClose, item,operation, onSubmit }) {
+  
   const [formData, setFormData] = useState({
     name: item.student_name || '',
     roomNo: item.room_no || '',
@@ -36,7 +38,6 @@ export default function FormModal({ isOpen, onClose, item,onSubmit }) {
       residence: '',
     });
   };
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,15 +48,22 @@ export default function FormModal({ isOpen, onClose, item,onSubmit }) {
       student_name: formData.name,
       attendance: formData.presentAbsent,
       meal_preference: mealPreference,
-      desiredfood :desiredfood,
+      desiredfood: desiredfood,
       phone_number: formData.phoneNumber,
       residence: formData.residence,
     };
-    onSubmit(updatedFormData);
-    console.log("updatedFormData",updatedFormData)
+
+    try {
+      onSubmit(updatedFormData);
+      operation === "Create" ? toast.success('New Data successfully Submitted!') : toast.success('Existing Data successfully Updated!') 
+      
+    } catch (error) {
+      toast.error('Failed to submit data!');
+    }
+
+    console.log('updatedFormData', updatedFormData);
     onClose();
   };
-  
 
   if (!isOpen) return null;
 
@@ -64,10 +72,10 @@ export default function FormModal({ isOpen, onClose, item,onSubmit }) {
       <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
       <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h1 className="text-lg leading-6 font-large text-gray-900" style={{padding:"10px",marginLeft:"15px",fontSize:"17px",fontWeight:"bold"}}>Edit Details</h1>
-          <button onClick={onClose} className="p-2">
-            ❌
-          </button>
+          <h1 className="text-lg leading-6 font-large text-gray-900" style={{ padding: '10px', marginLeft: '15px', fontSize: '17px', fontWeight: 'bold' }}>
+            {operation} Details
+          </h1>
+          <button onClick={onClose} className="p-2">❌</button>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 flex flex-wrap">
@@ -148,9 +156,7 @@ export default function FormModal({ isOpen, onClose, item,onSubmit }) {
             </div>
 
             {/* Right Side */}
-            <div>
-                
-            </div>
+            <div></div>
             <div className="sm:w-1/2 pl-4">
               <label className="block text-sm font-medium text-gray-700">Phone Number</label>
               <input
