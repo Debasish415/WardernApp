@@ -1,10 +1,10 @@
 .MainContainer{
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
 }
 
 .Content{
-  margin-right: 10%;
+  /* margin-right: 10%; */
 }
 .modal-overlay {
     position: fixed;

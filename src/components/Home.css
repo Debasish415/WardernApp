@@ -1,0 +1,11 @@
+.HomeContainer > div  {
+    background-image: url("/images/tridenthostel.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 91.5vh;
+    display: flex;
+    flex-direction: column;
+    width: 85vw;
+}
+

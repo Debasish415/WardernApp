@@ -13,12 +13,12 @@ export default function PaginationTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
- const [operation, setOperation]= useState(null)
+  const [operation, setOperation] = useState(null);
   const params = useLocation();
   console.log(params.pathname);
 
   useEffect(() => {
-  console.log(`Fetch data from the backend`)
+    console.log('Fetch data from the backend');
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/students');
@@ -32,14 +32,9 @@ export default function PaginationTable() {
     fetchData();
   }, []);
 
-  // Calculate total number of pages
   const totalPages = Math.ceil(items.length / itemsPerPage);
-
-  // Calculate start and end index of items for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-
-  // Slice items array based on current page
   const currentItems = items.slice(startIndex, endIndex);
 
   const nextPage = () => {
@@ -54,20 +49,19 @@ export default function PaginationTable() {
     }
   };
 
-  const handleEdit = (item,name) => {
-    setOperation(name)
+  const handleEdit = (item, name) => {
+    setOperation(name);
     setSelectedItem(item);
     setIsFormOpen(true);
   };
 
-  const handleCreate = (item,name)=>{
-    setOperation(name)
+  const handleCreate = (item, name) => {
+    setOperation(name);
     setSelectedItem({});
-    setIsFormOpen(true)
-  }
+    setIsFormOpen(true);
+  };
 
   const handleDelete = (id) => {
-    
     setSelectedItem(id);
     setIsModalOpen(true);
   };
@@ -77,17 +71,15 @@ export default function PaginationTable() {
       await fetch(`http://localhost:5000/api/students/${selectedItem}`, { method: 'DELETE' });
       setItems(items.filter(item => item.id !== selectedItem));
       setIsModalOpen(false);
-      toast.error('Deleted SuccessFull!');
+      toast.error('Deleted Successfully!');
     } catch (error) {
       toast.error('Delete Failed!');
-      
     }
   };
 
   const handleFormSubmit = async (item) => {
-    console.log("item--------------------:",item)
+    console.log('item--------------------:', item);
     if (selectedItem && selectedItem.id) {
-      // Update item
       try {
         const response = await fetch(`http://localhost:5000/api/students/${selectedItem.id}`, {
           method: 'PUT',
@@ -102,7 +94,6 @@ export default function PaginationTable() {
         console.error('Error updating item:', error);
       }
     } else {
-      // Create new item
       try {
         const response = await fetch('http://localhost:5000/api/students', {
           method: 'POST',
@@ -117,11 +108,10 @@ export default function PaginationTable() {
         console.error('Error creating item:', error);
       }
     }
-  
+
     setIsFormOpen(false);
     setSelectedItem(null);
   };
-  
 
   const handleCloseModal = () => {
     setIsFormOpen(false);
@@ -150,7 +140,7 @@ export default function PaginationTable() {
       <div className="p-12">
         <button
           className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-          onClick={()=>handleCreate(null,"Create")}
+          onClick={() => handleCreate(null, 'Create')}
         >
           Create
         </button>
@@ -166,22 +156,34 @@ export default function PaginationTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {currentItems.map(item => (
-              <tr key={item.id}>
-                <td className="px-12 py-3 whitespace-nowrap text-sm">{item.room_no}</td>
-                <td className="px-12 py-3 whitespace-nowrap text-sm">{item.student_name}</td>
-                <td className="px-12 py-3 whitespace-nowrap text-sm">{item.attendance}</td>
-                <td className="px-12 py-3 whitespace-nowrap text-sm">{item.meal_preference}</td>
-                <td className="px-12 py-3 whitespace-nowrap text-sm text-right">
-                  <button onClick={() => handleEdit(item,"Edit")} className="text-indigo-600 hover:text-indigo-900 mx-2">
-                    <PencilIcon className="h-5 w-5 inline" />
-                  </button>
-                  <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-900 mx-2">
-                    <TrashIcon className="h-5 w-5 inline" />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {
+              items.length === 0 ? (
+                <tr>
+                  <td colSpan="5">
+                    <div className="flex justify-center">
+                      <img src="/images/no-data.png" style={{ width: "100px", height: "100px" }} />
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                currentItems.map(item => (
+                  <tr key={item.id}>
+                    <td className="px-12 py-3 whitespace-nowrap text-sm">{item.room_no}</td>
+                    <td className="px-12 py-3 whitespace-nowrap text-sm">{item.student_name}</td>
+                    <td className="px-12 py-3 whitespace-nowrap text-sm">{item.attendance}</td>
+                    <td className="px-12 py-3 whitespace-nowrap text-sm">{item.meal_preference}</td>
+                    <td className="px-12 py-3 whitespace-nowrap text-sm text-right">
+                      <button onClick={() => handleEdit(item, 'Edit')} className="text-indigo-600 hover:text-indigo-900 mx-2">
+                        <PencilIcon className="h-5 w-5 inline" />
+                      </button>
+                      <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-900 mx-2">
+                        <TrashIcon className="h-5 w-5 inline" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )
+            }
           </tbody>
         </table>
 
@@ -217,30 +219,24 @@ export default function PaginationTable() {
                 <button
                   onClick={prevPage}
                   disabled={currentPage === 1}
-                  className={`relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
                 >
-                  <span className="sr-only">Previous</span>
                   <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
-                {Array.from({ length: totalPages }).map((_, index) => (
+                {Array.from({ length: totalPages }, (_, i) => (
                   <button
-                    key={index + 1}
-                    onClick={() => setCurrentPage(index + 1)}
-                    className={`relative inline-flex items-center px-4 py-2 text-sm font-medium ${
-                      currentPage === index + 1
-                        ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                    }`}
+                    key={i + 1}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === i + 1 ? 'bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}`}
                   >
-                    {index + 1}
+                    {i + 1}
                   </button>
                 ))}
                 <button
                   onClick={nextPage}
                   disabled={currentPage === totalPages}
-                  className={`relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
                 >
-                  <span className="sr-only">Next</span>
                   <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
               </nav>

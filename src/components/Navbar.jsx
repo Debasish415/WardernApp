@@ -6,7 +6,7 @@ function Navbar() {
     <div>
       <nav id="sidebar" className="bg-gray-800 text-white h-screen w-56 flex flex-col">
         <div className="p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">Navigation</h2>
+          <img src='/images/hostel.png' style={{width:"100px",height:"80px"}}/>
         </div>
         <ul className="flex-1 overflow-y-auto">
           <NavLink
