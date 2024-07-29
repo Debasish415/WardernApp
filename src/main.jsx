@@ -4,11 +4,17 @@ import App from './App.jsx'
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { AuthProvider } from './components/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
  
+    <AuthProvider> 
     <BrowserRouter>
-    <App />
-    <ToastContainer />
-    </BrowserRouter>,
+        <ToastContainer />
+        <App />
+    </BrowserRouter>
+    </AuthProvider>,
 )
+
+
+

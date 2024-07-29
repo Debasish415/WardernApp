@@ -5,6 +5,7 @@
 
 .Content{
   /* margin-right: 10%; */
+  width: 100%;
 }
 .modal-overlay {
     position: fixed;

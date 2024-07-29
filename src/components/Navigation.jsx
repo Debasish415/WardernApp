@@ -1,11 +1,12 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-
+import { AuthContext } from './AuthContext';
+import { useContext } from 'react';
 const navigation = [
-//   { name: 'Dashboard', href: '#', current: true },
-//   { name: 'Team', href: '#', current: false },
-//   { name: 'Projects', href: '#', current: false },
-//   { name: 'Calendar', href: '#', current: false },
+  { name: 'Trident', href: 'https://tat.ac.in/', current: false },
+  { name: 'Hostels', href: 'https://tat.ac.in/facilities/hostels/', current: false },
+  { name: 'Projects', href: '#', current: false },
+  { name: 'Calendar', href: '#', current: false },
 ];
 
 function classNames(...classes) {
@@ -13,6 +14,8 @@ function classNames(...classes) {
 }
 
 export default function Navigation() {
+
+  const { isAuthenticated } = useContext(AuthContext);
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -40,6 +43,7 @@ export default function Navigation() {
                   <a
                     key={item.name}
                     href={item.href}
+                    target="_blank"
                     aria-current={item.current ? 'page' : undefined}
                     className={classNames(
                       item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
@@ -70,7 +74,7 @@ export default function Navigation() {
                   <span className="sr-only">Open user menu</span>
                   <img
                     alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src="/images/user.png"
                     className="h-8 w-8 rounded-full"
                   />
                 </MenuButton>
@@ -89,11 +93,17 @@ export default function Navigation() {
                     Settings
                   </a>
                 </MenuItem>
-                <MenuItem>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+               {isAuthenticated ? ( <MenuItem>
+                  <a href="/login" onClick={()=>localStorage.clear()} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
                     Sign out
                   </a>
-                </MenuItem>
+                </MenuItem>) : (<MenuItem>
+                  <a href="/login"  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                    Sign In
+                  </a>
+                </MenuItem>) }
+                
+                
               </MenuItems>
             </Menu>
           </div>
@@ -107,6 +117,7 @@ export default function Navigation() {
               key={item.name}
               as="a"
               href={item.href}
+              target="_blank"
               aria-current={item.current ? 'page' : undefined}
               className={classNames(
                 item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',

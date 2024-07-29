@@ -1,0 +1,31 @@
+.LoginBackground {
+    background-image: url('/images/college.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 91.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.backdrop-filter {
+    backdrop-filter: blur(10px);
+}
+
+.backdrop-blur-md {
+    backdrop-filter: blur(12px);
+}
+
+.shadow-xl {
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+}
+
+button {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #4f46e5;
+    transform: translateY(-3px);
+}

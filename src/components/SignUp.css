@@ -1,0 +1,10 @@
+.Signupbackground {
+    background-image: url('/images/hosteltwo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 91.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

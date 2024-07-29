@@ -4,8 +4,9 @@ import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, TrashIcon } from '@heroi
 import FormModal from '../FormModal';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import "./PaginationTable.css"
 
-const itemsPerPage = 10;
+const itemsPerPage = 5;
 
 export default function PaginationTable() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,19 +19,24 @@ export default function PaginationTable() {
   console.log(params.pathname);
 
   useEffect(() => {
-    console.log('Fetch data from the backend');
     const fetchData = async () => {
+      const token = localStorage.getItem('token');
       try {
-        const response = await fetch('http://localhost:5000/api/students');
+        const response = await fetch('http://localhost:5000/api/students', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         const data = await response.json();
         setItems(data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -145,7 +151,7 @@ export default function PaginationTable() {
           Create
         </button>
 
-        <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg overflow-hidden paginationtable">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-12 py-3 text-left text-sm font-medium text-blue-500 uppercase tracking-wider">Room no.</th>
