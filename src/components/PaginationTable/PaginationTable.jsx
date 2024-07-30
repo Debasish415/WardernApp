@@ -2,27 +2,24 @@ import React, { useState, useEffect } from 'react';
 import DeleteModal from '../DeleteModal';
 import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, TrashIcon } from '@heroicons/react/20/solid';
 import FormModal from '../FormModal';
-import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import "./PaginationTable.css"
+import './PaginationTable.css';
 
 const itemsPerPage = 5;
 
-export default function PaginationTable() {
+export default function PaginationTable({ apiUrl }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [operation, setOperation] = useState(null);
-  const params = useLocation();
-  console.log(params.pathname);
 
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch('http://localhost:5000/api/students', {
+        const response = await fetch(apiUrl, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -33,10 +30,9 @@ export default function PaginationTable() {
         console.error('Error fetching data:', error);
       }
     };
-  
+
     fetchData();
-  }, []);
-  
+  }, [apiUrl]);
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -61,8 +57,8 @@ export default function PaginationTable() {
     setIsFormOpen(true);
   };
 
-  const handleCreate = (item, name) => {
-    setOperation(name);
+  const handleCreate = () => {
+    setOperation('Create');
     setSelectedItem({});
     setIsFormOpen(true);
   };
@@ -73,8 +69,14 @@ export default function PaginationTable() {
   };
 
   const handleConfirmDelete = async () => {
+    const token = localStorage.getItem('token');
     try {
-      await fetch(`http://localhost:5000/api/students/${selectedItem}`, { method: 'DELETE' });
+      await fetch(`${apiUrl}/${selectedItem}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       setItems(items.filter(item => item.id !== selectedItem));
       setIsModalOpen(false);
       toast.error('Deleted Successfully!');
@@ -84,34 +86,46 @@ export default function PaginationTable() {
   };
 
   const handleFormSubmit = async (item) => {
-    console.log('item--------------------:', item);
+    const token = localStorage.getItem('token');
+
     if (selectedItem && selectedItem.id) {
       try {
-        const response = await fetch(`http://localhost:5000/api/students/${selectedItem.id}`, {
+        const response = await fetch(`${apiUrl}/${selectedItem.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(item),
         });
+        if (!response.ok) {
+          throw new Error('Failed to update item');
+        }
         const updatedItem = await response.json();
         setItems(items.map(i => (i.id === selectedItem.id ? updatedItem : i)));
+        
       } catch (error) {
         console.error('Error updating item:', error);
+        toast.error('Error updating item');
       }
     } else {
       try {
-        const response = await fetch('http://localhost:5000/api/students', {
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(item),
         });
+        if (!response.ok) {
+          throw new Error('Failed to create item');
+        }
         const newItem = await response.json();
         setItems([...items, newItem]);
       } catch (error) {
         console.error('Error creating item:', error);
+        toast.error('Error creating item');
       }
     }
 
@@ -146,7 +160,7 @@ export default function PaginationTable() {
       <div className="p-12">
         <button
           className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-          onClick={() => handleCreate(null, 'Create')}
+          onClick={handleCreate}
         >
           Create
         </button>
@@ -221,28 +235,21 @@ export default function PaginationTable() {
               </p>
             </div>
             <div>
-              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              <nav className="relative inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                 <button
                   onClick={prevPage}
                   disabled={currentPage === 1}
-                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
+                  className={`relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
                 >
                   <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                  <span className="sr-only">Previous</span>
                 </button>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === i + 1 ? 'bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
                 <button
                   onClick={nextPage}
                   disabled={currentPage === totalPages}
-                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
+                  className={`relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
                 >
+                  <span className="sr-only">Next</span>
                   <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
               </nav>
