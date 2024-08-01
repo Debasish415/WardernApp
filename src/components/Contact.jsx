@@ -31,6 +31,13 @@ function Contact() {
         toast.success('Message sent successfully!', {
           position: 'top-right' // or use toast.POSITION.TOP_RIGHT
         });
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          countryCode: '+91',
+          message: ''
+        });
       } else {
         toast.error(result.message || 'Something went wrong!', {
           position: 'top-right' // or use toast.POSITION.TOP_RIGHT

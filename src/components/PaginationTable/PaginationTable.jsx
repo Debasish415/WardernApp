@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DeleteModal from '../DeleteModal';
 import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, TrashIcon } from '@heroicons/react/20/solid';
 import FormModal from '../FormModal';
 import { toast } from 'react-toastify';
 import './PaginationTable.css';
+import gsap from 'gsap';
 
 const itemsPerPage = 5;
 
@@ -14,6 +15,7 @@ export default function PaginationTable({ apiUrl }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [operation, setOperation] = useState(null);
+  const tableBodyRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +35,16 @@ export default function PaginationTable({ apiUrl }) {
 
     fetchData();
   }, [apiUrl]);
+
+  useEffect(() => {
+    if (tableBodyRef.current) {
+      gsap.fromTo(
+        tableBodyRef.current.children,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 1.5, stagger: 0.1, ease: 'power2.out' }
+      );
+    }
+  }, [currentPage, items]);
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -175,7 +187,7 @@ export default function PaginationTable({ apiUrl }) {
               <th className="px-12 py-3 text-left text-sm font-medium text-blue-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-200" ref={tableBodyRef}>
             {
               items.length === 0 ? (
                 <tr>

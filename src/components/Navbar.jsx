@@ -1,9 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
+import gsap from 'gsap';
 
 function Navbar() {
   const { isAuthenticated } = useContext(AuthContext);
+  const navItems = useRef([]);
+
+  useEffect(() => {
+    gsap.fromTo(
+      navItems.current, 
+      { x: -50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.5, ease: 'power2.out', stagger: 0.1 }
+    );
+  }, [isAuthenticated]);
 
   return (
     <div>
@@ -17,74 +27,84 @@ function Navbar() {
               <NavLink
                 to="/"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[0] = el}
               >
                 <li>Home</li>
               </NavLink>
               <NavLink
                 to="/contact"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[1] = el}
               >
                 <li>Contact</li>
               </NavLink>
               <NavLink
                 to="/monday"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[2] = el}
               >
                 <li>Monday</li>
               </NavLink>
               <NavLink
                 to="/tuesday"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[3] = el}
               >
                 <li>Tuesday</li>
               </NavLink>
               <NavLink
                 to="/wednesday"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[4] = el}
               >
                 <li>Wednesday</li>
               </NavLink>
               <NavLink
                 to="/thursday"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[5] = el}
               >
                 <li>Thursday</li>
               </NavLink>
               <NavLink
                 to="/friday"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[6] = el}
               >
                 <li>Friday</li>
               </NavLink>
               <NavLink
                 to="/saturday"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[7] = el}
               >
                 <li>Saturday</li>
               </NavLink>
               <NavLink
                 to="/sunday"
                 className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[8] = el}
               >
                 <li>Sunday</li>
               </NavLink>
             </>
           ) : (
             <>
-             <NavLink
-            to="/"
-            className="block py-2 px-4 hover:bg-black transition duration-200"
-          >
-            <li>Home</li>
-          </NavLink>
-          <NavLink
-            to="/contact"
-            className="block py-2 px-4 hover:bg-black transition duration-200"
-          >
-            <li>Contact</li>
-          </NavLink>
+              <NavLink
+                to="/"
+                className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[0] = el}
+              >
+                <li>Home</li>
+              </NavLink>
+              <NavLink
+                to="/contact"
+                className="block py-2 px-4 hover:bg-black transition duration-200"
+                ref={(el) => navItems.current[1] = el}
+              >
+                <li>Contact</li>
+              </NavLink>
             </>
-           
           )}
         </ul>
       </nav>

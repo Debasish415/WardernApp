@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
-import { Link ,useNavigate} from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import "./Login.css";
 import axios from 'axios';
+import gsap from 'gsap';
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const formRef = useRef(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/login', { email, password });
       localStorage.setItem('token', response.data.token);
       // Redirect to a protected route
-      window.location.href = "/monday";
+      window.location.href = "/";
     } catch (error) {
       console.error('Error logging in', error);
     }
   };
-  
+
+  useEffect(() => {
+    gsap.fromTo(
+      formRef.current.children,
+      { x: -50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.5, stagger: 0.2, ease: 'power2.out' }
+    );
+  }, []);
 
   return (
     <div className='LoginBackground'>
@@ -28,7 +39,7 @@ function Login() {
               Sign in to your account
             </h2>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit} ref={formRef}>
             <input type="hidden" name="remember" value="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
