@@ -7,3 +7,10 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 - BACKEND REPO :- [LINK](https://github.com/Debasish415/WardenApp_Server)
+
+
+https://github.com/user-attachments/assets/61b7c7c2-3664-4451-87ee-3119715d53e2
+
+
+
+
