@@ -1,14 +1,8 @@
-# React + Vite
+## Tech Used(Frontend)
+[![My Skills](https://skillicons.dev/icons?i=vite,react,tailwindcss)](https://skillicons.dev).
+## BACKEND REPO :- https://github.com/Debasish415/WardenApp_Server
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-- BACKEND REPO :- [LINK](https://github.com/Debasish415/WardenApp_Server)
-
-
+## PROJECT VIDEO :-
 https://github.com/user-attachments/assets/61b7c7c2-3664-4451-87ee-3119715d53e2
 
 
